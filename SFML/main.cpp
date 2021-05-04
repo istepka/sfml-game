@@ -1,5 +1,6 @@
 #include<SFML/Graphics.hpp>
 #include<game-runner.h>
+#include<uicontroller.h>
 #include <iostream>
 
 
@@ -9,6 +10,8 @@ int main()
 
 	int x = testMethod();
 	std::cout << x << std::endl;
+
+	testUI();
 
 	while (window.isOpen())
 	{
