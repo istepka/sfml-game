@@ -1,2 +1,2 @@
 #pragma once
-void testUI();
+void _render_pieces();

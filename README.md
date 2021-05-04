@@ -1,1 +1,1 @@
-# sfml-game
+# Scuffed Chess
