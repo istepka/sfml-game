@@ -77,10 +77,18 @@ int main()
 				else { // Move piece to desired position (currently no restrictions)
 					sf::Vector2i pos = sf::Mouse::getPosition(window);
 					std::vector<int> calculatedPos = calculateBoardClickedTile(pos.x, pos.y);
-					if (calculatedPos[0] == -1) break;
-
+					
 					std::vector<struct Piece> &Pieces = getPiecesOnBoard();
-					movePieceToTile(calculatedPos[0], calculatedPos[1], PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
+
+					if (calculatedPos[0] == -1) //If clicked in a bad place return figure to its origin
+					{
+						
+						movePieceToTile(Pieces[grabbedIndex].x, Pieces[grabbedIndex].y, PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
+						std::cout << "Returned to origin tile" << std::endl;
+					
+					}
+					else
+						movePieceToTile(calculatedPos[0], calculatedPos[1], PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
 
 					grabbedIndex = -1;
 					isPieceGrabbed = false;
