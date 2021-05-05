@@ -47,11 +47,14 @@ int main()
 			if (event.type == sf::Event::KeyPressed)
 			{
 				if (event.key.code == sf::Keyboard::R)
-				{
-					
+				{		
 					//movePieceToTile(3, 4, &PiecesSprites[0], &Pieces[0]);
-					
-					
+					std::vector<struct Piece> Pieces = getPiecesOnBoard();
+					for (int i = 0; i < NUMBER_OF_PIECES_TEXTURES; i++)
+					{
+						std::cout<<  i <<" piece " << Pieces[i].x << "," << Pieces[i].y <<std::endl;
+
+					}
 				}
 
 			}
@@ -65,14 +68,15 @@ int main()
 					sf::Vector2i pos = sf::Mouse::getPosition(window);
 					std::vector<int> calculatedPos = calculateBoardClickedTile(pos.x, pos.y);
 					grabbedIndex = getPieceIndex(calculatedPos[0], calculatedPos[1]);
+					
 					isPieceGrabbed = true;
 					std::cout << "Grabbed" << std::endl;
 				}
 				else { // Move piece to desired position (currently no restrictions)
 					sf::Vector2i pos = sf::Mouse::getPosition(window);
 					std::vector<int> calculatedPos = calculateBoardClickedTile(pos.x, pos.y);
-					std::vector<struct Piece> Pieces = getPiecesOnBoard();
-					movePieceToTile(calculatedPos[0], calculatedPos[1], &PiecesSprites[grabbedIndex], &Pieces[grabbedIndex]);
+					std::vector<struct Piece> &Pieces = getPiecesOnBoard();
+					movePieceToTile(calculatedPos[0], calculatedPos[1], PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
 
 					grabbedIndex = -1;
 					isPieceGrabbed = false;
@@ -94,7 +98,8 @@ int main()
 			if (isPieceGrabbed && i == grabbedIndex)
 			{
 				sf::Vector2i pos = sf::Mouse::getPosition(window);
-				PiecesSprites->setPosition(pos.x-38, pos.y-38);	
+				PiecesSprites[i].setPosition(pos.x-38, pos.y-38);	
+				//std::cout << "Following" << std::endl;
 			}
 			
 			window.draw(PiecesSprites[i]);

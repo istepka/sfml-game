@@ -23,5 +23,5 @@ struct Piece {
 
 int initBoard();
 struct Piece getPieceAtCords(int x, int y);
-std::vector< struct Piece> getPiecesOnBoard();
+ std::vector< struct Piece> &getPiecesOnBoard();
 int getPieceIndex(int x, int y);

@@ -141,7 +141,7 @@ struct Piece getPieceAtCords(int x, int y)
 }
 
 
-std::vector<Piece> getPiecesOnBoard()
+ std::vector<Piece> &getPiecesOnBoard()
 {
 	return alivePieces;
 }
