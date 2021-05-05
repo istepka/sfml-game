@@ -24,7 +24,8 @@ void movePieceToTile(int dest_x, int dest_y, sf::Sprite &pieceSprite, struct Pie
 
 std::vector<int> calculateBoardClickedTile(int x, int y)
 {
-	
+	if (x < BOARD_OFFSET_X + 40 || x > BOARD_OFFSET_X + 40 + 4 * SINGLE_TILE_WIDTH || y < BOARD_OFFSET_Y + 40 || y > BOARD_OFFSET_Y + 40 + 8 * SINGLE_TILE_HEIGHT)
+		return std::vector<int> {-1, -1};
 	x = x - 40 - BOARD_OFFSET_X;
 	x /= SINGLE_TILE_WIDTH;
 	y = y - 40 - BOARD_OFFSET_Y;
@@ -32,5 +33,7 @@ std::vector<int> calculateBoardClickedTile(int x, int y)
 
 	return std::vector<int> {x, y};
 }
+
+
 
 

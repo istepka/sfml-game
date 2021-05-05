@@ -9,7 +9,7 @@ void render_pieces(sf::Texture* PiecesTextures, sf::Sprite* PiecesSprites);
 
 int WINDOW_SIZE_X = 800, WINDOW_SIZE_Y = 1000;
 const int NUMBER_OF_PIECES_TEXTURES = 16;
-int BOARD_OFFSET_Y = 100, BOARD_OFFSET_X = 0;
+int BOARD_OFFSET_Y = 100, BOARD_OFFSET_X = 200;
 int SINGLE_TILE_WIDTH = 91, SINGLE_TILE_HEIGHT = 90;
 bool isPieceGrabbed = false;
 int grabbedIndex = -1;
@@ -64,17 +64,21 @@ int main()
 
 				if (!isPieceGrabbed) //Grab piece
 				{
-					
 					sf::Vector2i pos = sf::Mouse::getPosition(window);
 					std::vector<int> calculatedPos = calculateBoardClickedTile(pos.x, pos.y);
+					if (calculatedPos[0] == -1) break;
+
 					grabbedIndex = getPieceIndex(calculatedPos[0], calculatedPos[1]);
-					
+					if (grabbedIndex == -1) break;
+
 					isPieceGrabbed = true;
 					std::cout << "Grabbed" << std::endl;
 				}
 				else { // Move piece to desired position (currently no restrictions)
 					sf::Vector2i pos = sf::Mouse::getPosition(window);
 					std::vector<int> calculatedPos = calculateBoardClickedTile(pos.x, pos.y);
+					if (calculatedPos[0] == -1) break;
+
 					std::vector<struct Piece> &Pieces = getPiecesOnBoard();
 					movePieceToTile(calculatedPos[0], calculatedPos[1], PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
 
