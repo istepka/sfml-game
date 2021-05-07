@@ -141,9 +141,21 @@ struct Piece getPieceAtCords(int x, int y)
 }
 
 
-std::vector<Piece> getPiecesOnBoard()
+ std::vector<Piece> &getPiecesOnBoard()
 {
 	return alivePieces;
 }
 
 
+int getPieceIndex(int x, int y)
+{
+	for (int i = 0; i < alivePieces.size(); i++)
+	{
+		if (alivePieces[i].x == x && alivePieces[i].y == y)
+		{
+			return i;
+		}
+	}
+	
+	return -1;
+}
