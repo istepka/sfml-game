@@ -4,7 +4,7 @@
 
 void _render_pieces()
 {
-	std::vector<Piece> Pieces = getPiecesOnBoard();
+	std::vector<Piece> Pieces = bd_getPiecesOnBoard();
 
 	for (int i = 0; i < Pieces.size(); i++)
 	{

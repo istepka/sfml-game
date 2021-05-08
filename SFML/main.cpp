@@ -1,9 +1,10 @@
-#include<SFML/Graphics.hpp>
-#include<game-runner.h>
-#include<uicontroller.h>
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include <game-runner.h>
+#include <uicontroller.h>
 #include <utils.h>
+#include "board.h"
 
 void render_pieces(sf::Texture* PiecesTextures, sf::Sprite* PiecesSprites);
 
@@ -13,6 +14,8 @@ int BOARD_OFFSET_Y = 100, BOARD_OFFSET_X = 200;
 int SINGLE_TILE_WIDTH = 91, SINGLE_TILE_HEIGHT = 90;
 bool isPieceGrabbed = false;
 int grabbedIndex = -1;
+
+Board board;
 
 int main()
 {
@@ -28,7 +31,7 @@ int main()
 
 
 	//Initialize pieces on board
-	initBoard();
+	bd_init();
 	sf::Texture PiecesTextures[NUMBER_OF_PIECES_TEXTURES];
 	sf::Sprite PiecesSprites[NUMBER_OF_PIECES_TEXTURES];
 	render_pieces(PiecesTextures, PiecesSprites);
@@ -49,7 +52,7 @@ int main()
 				if (event.key.code == sf::Keyboard::R)
 				{		
 					//movePieceToTile(3, 4, &PiecesSprites[0], &Pieces[0]);
-					std::vector<struct Piece> Pieces = getPiecesOnBoard();
+					std::vector<struct Piece> Pieces = bd_getPiecesOnBoard();
 					for (int i = 0; i < NUMBER_OF_PIECES_TEXTURES; i++)
 					{
 						std::cout<<  i <<" piece " << Pieces[i].x << "," << Pieces[i].y <<std::endl;
@@ -68,7 +71,7 @@ int main()
 					std::vector<int> calculatedPos = calculateBoardClickedTile(pos.x, pos.y);
 					if (calculatedPos[0] == -1) break;
 
-					grabbedIndex = getPieceIndex(calculatedPos[0], calculatedPos[1]);
+					grabbedIndex = bd_getPieceIndex(calculatedPos[0], calculatedPos[1]);
 					if (grabbedIndex == -1) break;
 
 					isPieceGrabbed = true;
@@ -78,9 +81,10 @@ int main()
 					sf::Vector2i pos = sf::Mouse::getPosition(window);
 					std::vector<int> calculatedPos = calculateBoardClickedTile(pos.x, pos.y);
 					
-					std::vector<struct Piece> &Pieces = getPiecesOnBoard();
+					std::vector<struct Piece> &Pieces = bd_getPiecesOnBoard();
 
-					if (calculatedPos[0] == -1) //If clicked in a bad place return figure to its origin
+					//If clicked in a bad place return figure to its origin
+					if (calculatedPos[0] == -1 || !isLegal(Pieces[grabbedIndex], calculatedPos[0], calculatedPos[1]))
 					{
 						
 						movePieceToTile(Pieces[grabbedIndex].x, Pieces[grabbedIndex].y, PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
@@ -88,7 +92,10 @@ int main()
 					
 					}
 					else
+					{
+						bd_move(Pieces[grabbedIndex], calculatedPos[0], calculatedPos[1]);
 						movePieceToTile(calculatedPos[0], calculatedPos[1], PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
+					}
 
 					grabbedIndex = -1;
 					isPieceGrabbed = false;
@@ -127,7 +134,7 @@ int main()
 //Only render on the begining
 void render_pieces(sf::Texture *PiecesTextures, sf::Sprite *PiecesSprites)
 {
-	std::vector<Piece> Pieces = getPiecesOnBoard();
+	std::vector<Piece> Pieces = bd_getPiecesOnBoard();
 	
 	for (int i = 0; i <Pieces.size(); i++)
 	{
@@ -137,7 +144,7 @@ void render_pieces(sf::Texture *PiecesTextures, sf::Sprite *PiecesSprites)
 		std::string piece_name = "", color = "", filename;
 
 		color = Pieces[i].player_color == PieceColor::black ? "black" : "white";
-		switch (Pieces[i].piece_type)
+		switch (Pieces[i].type)
 		{
 		case PieceType::bishop:
 		{
@@ -167,7 +174,7 @@ void render_pieces(sf::Texture *PiecesTextures, sf::Sprite *PiecesSprites)
 		}
 		filename = "./res/" + piece_name + "_" + color + ".png";
 		
-		std::cout << Pieces[i].piece_type << filename << std::endl;
+		std::cout << Pieces[i].type << filename << std::endl;
 		
 
 
