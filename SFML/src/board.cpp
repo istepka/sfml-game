@@ -7,14 +7,6 @@ int bd_init()
 {
     auto &alivePieces = board.alivePieces;
 
-    // for (size_t i = 0; i < 7; i++)
-	// {
-	// 	for (size_t j = 0; j < 4; j++)
-	// 	{
-	// 		board.board[i][j] = nullptr;
-	// 	}
-	// }
-
 	//Add pawns
 	for (int i = 0; i < 4; i++)
 	{
@@ -25,10 +17,7 @@ int bd_init()
 		bd_makePiece(black, static_cast<PieceType>(i + 1), i, 6);
 	}
 
-	for (Piece &piece : board.alivePieces)
-	{
-		board.board[piece.x][piece.y] = &piece;
-	}
+	bd_build();
 
 	//Print alive pieces to debug
 	for (int i = 0; i < alivePieces.size(); i++)
@@ -86,4 +75,17 @@ void bd_move(Piece &piece, int x, int y)
 	piece.hasMoved = true;
     board.board[x][y] = &piece;
     board.board[piece.x][piece.y] = nullptr;
+}
+
+void bd_destroy(Piece &piece)
+{
+	piece.alive = false;
+	bd_build();
+}
+
+void bd_build()
+{
+	for (Piece &piece : board.alivePieces)
+		if (piece.alive)
+			board.board[piece.x][piece.y] = &piece;
 }

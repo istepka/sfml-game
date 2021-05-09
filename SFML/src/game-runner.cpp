@@ -13,8 +13,7 @@ bool isLegal(const Piece piece, int x, int y)
 
 	const Piece* other = bd_getPieceAtCords(x, y);
 
-	// For now, deny occupied squares
-	if (other)
+	if (other && other->player_color == piece.player_color)
 	{
 		return false;
 	}

@@ -77,7 +77,7 @@ int main()
 					isPieceGrabbed = true;
 					std::cout << "Grabbed" << std::endl;
 				}
-				else { // Move piece to desired position (currently no restrictions)
+				else { // Move piece to desired position (currently restrictions)
 					sf::Vector2i pos = sf::Mouse::getPosition(window);
 					std::vector<int> calculatedPos = calculateBoardClickedTile(pos.x, pos.y);
 					
@@ -93,6 +93,12 @@ int main()
 					}
 					else
 					{
+						Piece* other = bd_getPieceAtCords(calculatedPos[0], calculatedPos[1]);
+						if (other)
+						{
+							bd_destroy(*other);
+						}
+						
 						bd_move(Pieces[grabbedIndex], calculatedPos[0], calculatedPos[1]);
 						movePieceToTile(calculatedPos[0], calculatedPos[1], PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
 					}
@@ -121,7 +127,9 @@ int main()
 				//std::cout << "Following" << std::endl;
 			}
 			
-			window.draw(PiecesSprites[i]);
+			// Modifying the vector breaks the sprite array!
+			if (board.alivePieces[i].alive)
+				window.draw(PiecesSprites[i]);
 		}
 
 		window.display();
