@@ -27,6 +27,7 @@ struct Board
 {
     Piece* board[4][7];
     std::vector<Piece> alivePieces;
+	PieceColor toMove = white;
 };
 
 int bd_init();

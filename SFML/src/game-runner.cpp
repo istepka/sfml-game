@@ -8,15 +8,16 @@ extern Board board;
 
 bool isLegal(const Piece piece, int x, int y)
 {
+	if (board.toMove != piece.player_color)
+		return false;
+
 	if (x == piece.x && y == piece.y)
 		return false;
 
 	const Piece* other = bd_getPieceAtCords(x, y);
 
 	if (other && other->player_color == piece.player_color)
-	{
 		return false;
-	}
 
 	int xs = (piece.x < x) ? 1 : -1, ys = (piece.y < y) ? 1 : -1;
 	int dx = abs(x - piece.x), dy = abs(y - piece.y);

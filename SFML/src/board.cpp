@@ -75,6 +75,7 @@ void bd_move(Piece &piece, int x, int y)
 	piece.hasMoved = true;
     board.board[x][y] = &piece;
     board.board[piece.x][piece.y] = nullptr;
+	board.toMove = static_cast<PieceColor>(!board.toMove);
 }
 
 void bd_destroy(Piece &piece)
