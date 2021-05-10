@@ -1,7 +1,7 @@
 #include <iostream>
-#include "game-runner.h"
+#include <game-runner.h>
 #include <SFML/Graphics.hpp>
-#include "utils.h"
+#include <utils.h>
 
 extern int BOARD_OFFSET_Y, BOARD_OFFSET_X;
 extern int SINGLE_TILE_WIDTH , SINGLE_TILE_HEIGHT ;
@@ -32,6 +32,12 @@ std::vector<int> calculateBoardClickedTile(int x, int y)
 	y = y / SINGLE_TILE_HEIGHT;
 
 	return std::vector<int> {x, y};
+}
+
+
+void saveGame(Board &board)
+{
+
 }
 
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "board.h"
+#include <board.h>
 
 struct GameState
 {

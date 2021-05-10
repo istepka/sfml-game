@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
-#include "game-runner.h"
-#include "board.h"
+#include <game-runner.h>
+#include <board.h>
 
 extern Board board;
 

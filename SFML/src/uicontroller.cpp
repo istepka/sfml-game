@@ -1,5 +1,5 @@
 #include <vector>
-#include "game-runner.h"
+#include <game-runner.h>
 #include <iostream>
 
 void _render_pieces()

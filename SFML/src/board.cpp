@@ -1,5 +1,7 @@
 #include <iostream>
 #include "board.h"
+#include <fstream>
+#include <utils.h>
 
 extern Board board;
 
@@ -89,4 +91,59 @@ void bd_build()
 	for (Piece &piece : board.alivePieces)
 		if (piece.alive)
 			board.board[piece.x][piece.y] = &piece;
+}
+
+void bd_save()
+{
+	std::ofstream save_file("./save/save.txt");
+
+	save_file << board.toMove << "\n";
+
+	for (Piece& piece : board.alivePieces)
+	{
+		save_file << piece.alive << " " << piece.hasMoved << " " << piece.player_color << " " << piece.type << " " << piece.x << " " << piece.y << "\n";
+
+	}
+
+	/*for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 7; j++)
+			save_file << board.board[i][j] << " ";
+		save_file << "\n";
+	}*/
+	save_file.close();
+
+}
+
+void bd_clear()
+{
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 7; j++)
+			board.board[i][j] = nullptr;
+}
+
+void bd_load_save()
+{
+	bd_clear();
+
+	std::ifstream save_file("./save/save.txt");
+
+	int color; 
+	save_file >> color;
+	board.toMove = static_cast<PieceColor>(color);
+
+	for (Piece& piece : board.alivePieces)
+	{
+		int type;
+		save_file >> piece.alive >> piece.hasMoved >> color >> type >> piece.x >> piece.y;
+		piece.player_color = static_cast<PieceColor>(color);
+		piece.type = static_cast<PieceType>(type);
+
+		bd_move(piece, piece.x, piece.y);
+		
+	}
+
+
+	bd_build();
+
+	save_file.close();
 }

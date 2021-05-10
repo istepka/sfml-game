@@ -45,3 +45,6 @@ void bd_move(Piece &piece, int x, int y);
 void bd_destroy(Piece &piece);
 
 void bd_build();
+
+void bd_save();
+void bd_load_save();
