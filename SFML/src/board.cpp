@@ -61,7 +61,7 @@ int bd_getPieceIndex(int x, int y)
 
 	for (int i = 0; i < alivePieces.size(); i++)
 	{
-		if (alivePieces[i].x == x && alivePieces[i].y == y)
+		if (alivePieces[i].x == x && alivePieces[i].y == y && alivePieces[i].alive)
 		{
 			return i;
 		}

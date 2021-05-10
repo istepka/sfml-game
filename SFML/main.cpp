@@ -77,7 +77,7 @@ int main()
 					isPieceGrabbed = true;
 					std::cout << "Grabbed" << std::endl;
 				}
-				else { // Move piece to desired position (currently restrictions)
+				else { // Move piece to desired position (currently some restrictions)
 					sf::Vector2i pos = sf::Mouse::getPosition(window);
 					std::vector<int> calculatedPos = calculateBoardClickedTile(pos.x, pos.y);
 					
