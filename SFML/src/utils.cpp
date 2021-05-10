@@ -11,7 +11,7 @@ void movePieceToTile(int dest_x, int dest_y, sf::Sprite &pieceSprite, struct Pie
 {
 	
 
-	std::cout << "Moved "<<  pieceStruct.piece_type <<" to " << dest_x <<"," <<dest_y << std::endl;
+	std::cout << "Moved "<<  pieceStruct.type <<" to " << dest_x <<"," <<dest_y << std::endl;
 	pieceStruct.x = dest_x;
 	pieceStruct.y = dest_y;
 

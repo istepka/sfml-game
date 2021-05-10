@@ -2,9 +2,9 @@
 *.sln
 graphics/
 
-
-
-
+.vscode
+includes/
+lib/
 
 
 # SOME STUFF TO IGNORE VStudio FILES  and c++ compiled stuff
