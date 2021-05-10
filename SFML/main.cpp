@@ -1,9 +1,10 @@
 #include<SFML/Graphics.hpp>
-#include<game-runner.h>
-#include<uicontroller.h>
+//#include<game-runner.h>
+#include "src/uicontroller.h"
 #include <iostream>
 #include <string>
-#include <utils.h>
+#include "src/utils.h"
+#include "src/game-runner.h"
 
 void render_pieces(sf::Texture* PiecesTextures, sf::Sprite* PiecesSprites);
 
