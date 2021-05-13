@@ -3,9 +3,12 @@
 #include <string>
 #include <board.h>
 #include <utils.h>
+#include <map>
+#include <uicontroller.h>
 
 
 void render_pieces(sf::Texture* PiecesTextures, sf::Sprite* PiecesSprites);
+void load_sprites_and_textures();
 
 int WINDOW_SIZE_X = 800, WINDOW_SIZE_Y = 1000;
 const int NUMBER_OF_PIECES_TEXTURES = 16;
@@ -17,26 +20,25 @@ int game_state = 0; //0 - menu, 1 - game
 
 Board board;
 
+
 int main()
 {
-
+	std::map<std::string, sf::Sprite> sprites_dictionary;
+	std::map<std::string, sf::Texture> textures_dictionary;
+	ui_load_sprites_and_textures(textures_dictionary, sprites_dictionary);
 	sf::RenderWindow window(sf::VideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 32), "Scuffed chess");
 	
-	sf::Texture boardTexture;
-	boardTexture.loadFromFile("./res/board.png");
-	boardTexture.setSmooth(true);
-	sf::Sprite boardSprite(boardTexture);
-	boardSprite.setTextureRect(sf::IntRect(0, 0, 400, 660));
-	boardSprite.setPosition(BOARD_OFFSET_X, BOARD_OFFSET_Y);
+	sf::Color button_color = sf::Color::Color(230, 230, 230);
+	sf::Color background_color = sf::Color::Color(217, 217, 217);
 
-
+	
 	//Initialize pieces on board
 	bd_init();
 	sf::Texture PiecesTextures[NUMBER_OF_PIECES_TEXTURES];
 	sf::Sprite PiecesSprites[NUMBER_OF_PIECES_TEXTURES];
 	render_pieces(PiecesTextures, PiecesSprites);
 
-
+	
 
 	std::string whose_turn = "white", turn_dummy_text ="Turn: ";
 	sf::Font font;
@@ -48,29 +50,29 @@ int main()
 	text_turn.setFillColor(sf::Color::Black);
 	text_turn.setString(turn_dummy_text + whose_turn);
 
-
-	sf::Texture backButtonTexture;
-	backButtonTexture.loadFromFile("./res/back.png");
-	backButtonTexture.setSmooth(true);
-	sf::Sprite backButtonSprite(backButtonTexture);
-	backButtonSprite.setTextureRect(sf::IntRect(0, 0, 100, 100));
-	backButtonSprite.setPosition(10, 10);
-
-	sf::Texture emptyTexture;
-
-	sf::Sprite playButtonSprite(emptyTexture);
-	playButtonSprite.setTextureRect(sf::IntRect(0, 0, 250, 60));
-	playButtonSprite.setPosition(WINDOW_SIZE_X/2-150, 200);
-	playButtonSprite.setColor(sf::Color::Color(255, 166, 77, 100));
-
 	sf::Text menu_play = text_turn;
 	menu_play.setString("Play");
 	menu_play.setPosition(WINDOW_SIZE_X / 2 - 80, 200 - 2);
+
+	sf::Text menu_load = text_turn;
+	menu_load.setString("Load game");
+	menu_load.setPosition(WINDOW_SIZE_X / 2 - 150, 200 - 2 + 100);
+	
+
+	sf::Text menu_exit = text_turn;
+	menu_exit.setString("Exit");
+	menu_exit.setPosition(WINDOW_SIZE_X / 2 - 150, 200 - 2 + 200);
 
 	sf::Text save_exit_text = text_turn;
 	save_exit_text.setString("Save & exit");
 	save_exit_text.setPosition(0, 0);
 	save_exit_text.setCharacterSize(24);
+
+
+	sf::Text new_game = text_turn;
+	new_game.setString("New game");
+	new_game.setPosition(0, 100 - 2);
+	new_game.setCharacterSize(24);
 
 	while (window.isOpen())
 	{
@@ -81,30 +83,45 @@ int main()
 			if (event.type == sf::Event::Closed) window.close();
 
 			if (game_state == 0) { //menu actions
-
 				if (event.type == sf::Event::MouseButtonPressed)
 				{
-
-					
-					if (playButtonSprite.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+					if (sprites_dictionary["play_button"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 					{
 						// mouse is on sprite
 						game_state = 1;
+						bd_new_game();
+						std::vector< Piece>& Pieces = bd_getPiecesOnBoard();
+						for (int i = 0; i < Pieces.size(); i++)
+							move_piece_to_tile(board.alivePieces[i].x, board.alivePieces[i].y, PiecesSprites[i], Pieces[i]);
+						whose_turn = "white";
+						board.toMove = PieceColor::white;
+						text_turn.setString(turn_dummy_text + whose_turn);
 					}
-					
+					else if (sprites_dictionary["load_button_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+					{
+						bd_load_save();
+						std::vector< Piece>& Pieces = bd_getPiecesOnBoard();
+						for (int i = 0; i < Pieces.size(); i++)
+							move_piece_to_tile(board.alivePieces[i].x, board.alivePieces[i].y, PiecesSprites[i], Pieces[i]);
 
+						whose_turn = board.toMove == PieceColor::white ? "white" : "black";
+						text_turn.setString(turn_dummy_text + whose_turn);
+						game_state = 1;
+					}
+					else if (sprites_dictionary["exit_button_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+					{
+						window.close();
+					}
 
 					
 				}
 			}
 			else {
 				//game handling
-
 				if (event.type == sf::Event::KeyPressed)
 				{
 					if (event.key.code == sf::Keyboard::R)
 					{
-						//movePieceToTile(3, 4, &PiecesSprites[0], &Pieces[0]);
 						std::vector<struct Piece> Pieces = bd_getPiecesOnBoard();
 						for (int i = 0; i < NUMBER_OF_PIECES_TEXTURES; i++)
 						{
@@ -112,44 +129,32 @@ int main()
 
 						}
 					}
-
-					if (event.key.code == sf::Keyboard::D)
-					{
-					
-						
-						bd_load_save();
-						std::vector< Piece>& Pieces = bd_getPiecesOnBoard();
-						for (int i = 0; i < Pieces.size(); i++)
-							movePieceToTile(board.alivePieces[i].x, board.alivePieces[i].y, PiecesSprites[i], Pieces[i]);
-
-						whose_turn = board.toMove == PieceColor::white ? "white" : "black";
-						text_turn.setString(turn_dummy_text + whose_turn);
-
-						/*for (int i = 0; i < 4; i++)
-						{
-							for (int j = 0; j < 7; j++)
-							{
-								std::cout << board.board[i][j] == nullptr ? 
-							}
-						}*/
-							
-					}
 				}
 
 				if (event.type == sf::Event::MouseButtonPressed)
 				{
 					//Back to menu button
-					if (backButtonSprite.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) 
+					if (sprites_dictionary["back_button_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 					{
 						bd_save();
 						game_state = 0;
+					}
+					if (sprites_dictionary["new_game_button_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+					{
+						bd_new_game();
+						std::vector< Piece>& Pieces = bd_getPiecesOnBoard();
+						for (int i = 0; i < Pieces.size(); i++)
+							move_piece_to_tile(board.alivePieces[i].x, board.alivePieces[i].y, PiecesSprites[i], Pieces[i]);
+						whose_turn = "white";
+						board.toMove = PieceColor::white;
+						text_turn.setString(turn_dummy_text + whose_turn);
 					}
 
 
 					if (!isPieceGrabbed) //Grab piece
 					{
 						sf::Vector2i pos = sf::Mouse::getPosition(window);
-						std::vector<int> calculatedPos = calculateBoardClickedTile(pos.x, pos.y);
+						std::vector<int> calculatedPos = calculate_clicked_tile_on_borad(pos.x, pos.y);
 						if (calculatedPos[0] == -1) break;
 
 						grabbedIndex = bd_getPieceIndex(calculatedPos[0], calculatedPos[1]);
@@ -160,7 +165,7 @@ int main()
 					}
 					else { // Move piece to desired position (currently some restrictions)
 						sf::Vector2i pos = sf::Mouse::getPosition(window);
-						std::vector<int> calculatedPos = calculateBoardClickedTile(pos.x, pos.y);
+						std::vector<int> calculatedPos = calculate_clicked_tile_on_borad(pos.x, pos.y);
 
 						std::vector<struct Piece>& Pieces = bd_getPiecesOnBoard();
 
@@ -168,7 +173,7 @@ int main()
 						if (calculatedPos[0] == -1 || !isLegal(Pieces[grabbedIndex], calculatedPos[0], calculatedPos[1]))
 						{
 
-							movePieceToTile(Pieces[grabbedIndex].x, Pieces[grabbedIndex].y, PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
+							move_piece_to_tile(Pieces[grabbedIndex].x, Pieces[grabbedIndex].y, PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
 							std::cout << "Returned to origin tile" << std::endl;
 
 						}
@@ -181,7 +186,7 @@ int main()
 							}
 
 							bd_move(Pieces[grabbedIndex], calculatedPos[0], calculatedPos[1]);
-							movePieceToTile(calculatedPos[0], calculatedPos[1], PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
+							move_piece_to_tile(calculatedPos[0], calculatedPos[1], PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
 
 							//Change turn display text
 							if (whose_turn == "white") whose_turn = "black";
@@ -201,12 +206,12 @@ int main()
 			}
 		}
 
-		window.clear(sf::Color::Color(255, 204, 153));
+		window.clear(background_color);
 		
 
 		if (game_state == 1) { //display in-game stuff
 			
-			window.draw(boardSprite);
+			window.draw(sprites_dictionary["board_sprite"]);
 
 			for (int i = 0; i < NUMBER_OF_PIECES_TEXTURES; i++)
 			{
@@ -226,13 +231,21 @@ int main()
 			window.draw(text_turn);
 			window.draw(save_exit_text);
 
-			window.draw(backButtonSprite);
+			window.draw(sprites_dictionary["new_game_button_sprite"]);
+			window.draw(new_game);
+
+			window.draw(sprites_dictionary["back_button_sprite"]);
 		}
 		else if (game_state == 0) //display main_menu stuff
 		{
-			window.clear(sf::Color::Color(255, 204, 153));
-			window.draw(playButtonSprite);
+			window.clear(background_color);
+			window.draw(sprites_dictionary["play_button"]);
 			window.draw(menu_play);
+
+			window.draw(sprites_dictionary["load_button_sprite"]);
+			window.draw(menu_load);
+			window.draw(sprites_dictionary["exit_button_sprite"]);
+			window.draw(menu_exit);
 		}
 
 
@@ -305,6 +318,4 @@ void render_pieces(sf::Texture *PiecesTextures, sf::Sprite *PiecesSprites)
 		//PiecesSprites[]
 	}
 }
-
-
 

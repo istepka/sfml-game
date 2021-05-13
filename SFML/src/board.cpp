@@ -147,3 +147,14 @@ void bd_load_save()
 
 	save_file.close();
 }
+
+void bd_new_game()
+{
+	bd_clear();
+
+	board.alivePieces.clear();
+	
+	bd_init();
+
+	bd_build();
+}

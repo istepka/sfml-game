@@ -48,3 +48,4 @@ void bd_build();
 
 void bd_save();
 void bd_load_save();
+void bd_new_game();
