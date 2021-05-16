@@ -26,7 +26,9 @@ struct Piece {
 struct Board
 {
     Piece* board[4][7];
+	Piece* king[2];
     std::vector<Piece> alivePieces;
+	std::vector<Piece> prevState;
 	PieceColor toMove = white;
 };
 
@@ -45,6 +47,8 @@ void bd_move(Piece &piece, int x, int y);
 void bd_destroy(Piece &piece);
 
 void bd_build();
+
+void bd_undo();
 
 void bd_save();
 void bd_load_save();

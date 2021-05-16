@@ -158,12 +158,13 @@ int main()
 						std::vector<int> calculatedPos = calculate_clicked_tile_on_borad(pos.x, pos.y);
 
 						std::vector<struct Piece>& Pieces = bd_getPiecesOnBoard();
+						Piece& grabbedPiece = Pieces[grabbedIndex];
 
 						//If clicked in a bad place return figure to its origin
-						if (calculatedPos[0] == -1 || !isLegal(Pieces[grabbedIndex], calculatedPos[0], calculatedPos[1]))
+						if (calculatedPos[0] == -1 || !isLegal(grabbedPiece, calculatedPos[0], calculatedPos[1]))
 						{
 
-							move_piece_to_tile(Pieces[grabbedIndex].x, Pieces[grabbedIndex].y, PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
+							move_piece_to_tile(grabbedPiece.x, grabbedPiece.y, PiecesSprites[grabbedIndex], grabbedPiece);
 							std::cout << "Returned to origin tile" << std::endl;
 
 						}
@@ -175,8 +176,16 @@ int main()
 								bd_destroy(*other);
 							}
 
-							bd_move(Pieces[grabbedIndex], calculatedPos[0], calculatedPos[1]);
-							move_piece_to_tile(calculatedPos[0], calculatedPos[1], PiecesSprites[grabbedIndex], Pieces[grabbedIndex]);
+							bd_move(grabbedPiece, calculatedPos[0], calculatedPos[1]);
+
+							if (isInCheck(static_cast<PieceColor>(!board.toMove)))
+							{
+								bd_undo();
+								move_piece_to_tile(grabbedPiece.x, grabbedPiece.y, PiecesSprites[grabbedIndex], grabbedPiece);
+								std::cout << "In check, returned to origin tile" << std::endl;
+							}
+							else
+								move_piece_to_tile(calculatedPos[0], calculatedPos[1], PiecesSprites[grabbedIndex], grabbedPiece);
 
 							//Change turn display text
 							if (whose_turn == "white") whose_turn = "black";

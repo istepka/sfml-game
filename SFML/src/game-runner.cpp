@@ -71,3 +71,14 @@ bool isLegal(const Piece piece, int x, int y)
 	
 	return true;
 }
+
+bool isInCheck(PieceColor color)
+{
+	int kx = board.king[color]->x, ky = board.king[color]->y;
+
+	for (Piece& piece : board.alivePieces)
+		if (piece.alive && piece.player_color != color && isLegal(piece, kx, ky))
+			return true;
+	
+	return false;
+}

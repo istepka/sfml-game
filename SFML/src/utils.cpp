@@ -12,8 +12,6 @@ void move_piece_to_tile(int dest_x, int dest_y, sf::Sprite &pieceSprite, struct 
 	
 
 	std::cout << "Moved "<<  pieceStruct.type <<" to " << dest_x <<"," <<dest_y << std::endl;
-	pieceStruct.x = dest_x;
-	pieceStruct.y = dest_y;
 
 	pieceSprite.setPosition(  BOARD_OFFSET_X + 40 + SINGLE_TILE_WIDTH * pieceStruct.x, BOARD_OFFSET_Y + 40 + SINGLE_TILE_HEIGHT * pieceStruct.y );
 

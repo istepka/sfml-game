@@ -74,10 +74,14 @@ int bd_getPieceIndex(int x, int y)
 
 void bd_move(Piece &piece, int x, int y)
 {
-	piece.hasMoved = true;
+	board.prevState = board.alivePieces;
     board.board[x][y] = &piece;
     board.board[piece.x][piece.y] = nullptr;
 	board.toMove = static_cast<PieceColor>(!board.toMove);
+
+	piece.hasMoved = true;
+	piece.x = x;
+	piece.y = y;
 }
 
 void bd_destroy(Piece &piece)
@@ -89,8 +93,19 @@ void bd_destroy(Piece &piece)
 void bd_build()
 {
 	for (Piece &piece : board.alivePieces)
+	{
 		if (piece.alive)
 			board.board[piece.x][piece.y] = &piece;
+		if (piece.type == king)
+			board.king[piece.player_color] = &piece;
+	}
+}
+
+void bd_undo()
+{
+	board.alivePieces = board.prevState;
+	board.toMove = static_cast<PieceColor>(!board.toMove);
+	bd_build();
 }
 
 void bd_save()

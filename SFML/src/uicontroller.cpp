@@ -18,7 +18,7 @@ void _render_pieces()
 extern int BOARD_OFFSET_X, BOARD_OFFSET_Y, WINDOW_SIZE_X;
 void ui_load_sprites_and_textures(std::map<std::string, sf::Texture> &textures_dictionary, std::map<std::string, sf::Sprite> &sprites_dictionary )
 {
-	sf::Color button_color = sf::Color::Color(230, 230, 230);
+	sf::Color button_color = sf::Color(230, 230, 230);
 
 
 	textures_dictionary["board_texture"] = sf::Texture();
@@ -115,18 +115,18 @@ void ui_load_texts(std::map<std::string, sf::Text>& texts_dic, sf::Font &font)
 }
 
 
-void ui_init_sounds()
-{
-	sf::SoundBuffer buffer;
-	buffer.loadFromFile("./res/move.flac");
-	sf::Sound move;
-	move.setBuffer(buffer);
+// void ui_init_sounds()
+// {
+// 	sf::SoundBuffer buffer;
+// 	buffer.loadFromFile("./res/move.flac");
+// 	sf::Sound move;
+// 	move.setBuffer(buffer);
 
-	buffer.loadFromFile("./res/click.flac");
-	sf::Sound click;
-	click.setBuffer(buffer);
-
-
+// 	buffer.loadFromFile("./res/click.flac");
+// 	sf::Sound click;
+// 	click.setBuffer(buffer);
 
 
-}
+
+
+// }
