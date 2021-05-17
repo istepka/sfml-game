@@ -89,7 +89,7 @@ void ui_load_sprites_and_textures(std::map<std::string, sf::Texture> &textures_d
 	sprites_dictionary["save_game_button_sprite"].setColor(button_color);
 }
 
-void ui_load_texts(std::map<std::string, sf::Text>& texts_dic, sf::Font &font)
+void ui_load_texts(std::map<std::string, sf::Text>& texts_dic, sf::Font &font, sf::Font &bold_font)
 {
 	sf::Text text_turn;
 	text_turn.setPosition(WINDOW_SIZE_X / 2 - 100, 80);
@@ -131,13 +131,14 @@ void ui_load_texts(std::map<std::string, sf::Text>& texts_dic, sf::Font &font)
 
 	sf::Text info_text = text_turn;
 	info_text.setString("");
-	info_text.setPosition(WINDOW_SIZE_Y - 24, 0);
-	info_text.setCharacterSize(24);
+	info_text.setPosition(0, WINDOW_SIZE_Y - 30);
+	info_text.setCharacterSize(20);
 
 	sf::Text title_text = text_turn;
 	title_text.setString("Scuffed chess!");
 	title_text.setPosition(WINDOW_SIZE_X/2 - 150, 120);
 	title_text.setCharacterSize(45);
+	title_text.setFont(bold_font);
 
 
 	texts_dic["text_turn"] = text_turn;

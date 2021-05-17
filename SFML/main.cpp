@@ -38,7 +38,9 @@ int main()
 
 	std::string whose_turn = "white", turn_dummy_text = "Turn: ";
 	sf::Font font;
-	font.loadFromFile("./res/ArialUnicodeMS.ttf");
+	font.loadFromFile("./res/Raleway-Medium.ttf");
+	sf::Font bold_font;
+	bold_font.loadFromFile("./res/Raleway-SemiBold.ttf");
 
 
 
@@ -46,7 +48,7 @@ int main()
 
 
 	ui_load_sprites_and_textures(textures_dictionary, sprites_dictionary);
-	ui_load_texts(texts_dictionary, font);
+	ui_load_texts(texts_dictionary, font, bold_font);
 	bd_init();
 	ui_render_pieces(PiecesTextures, PiecesSprites);
 	ui_load_sounds();
@@ -104,12 +106,14 @@ int main()
 					}
 
 					click.play();
+					
 				}
 			}
 			else {
 
 				if (event.type == sf::Event::MouseButtonPressed)
 				{
+					texts_dictionary["info_text"].setString("");
 					//Back to menu button
 					if (sprites_dictionary["back_button_background_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 					{
@@ -158,6 +162,7 @@ int main()
 						{
 							move_piece_to_tile(grabbedPiece.x, grabbedPiece.y, PiecesSprites[grabbed_index], grabbedPiece);
 							std::cout << "Returned to origin tile" << std::endl;
+							texts_dictionary["info_text"].setString("Returned to origin tile");
 						}
 						else
 						{
@@ -174,6 +179,7 @@ int main()
 								bd_undo();
 								move_piece_to_tile(grabbedPiece.x, grabbedPiece.y, PiecesSprites[grabbed_index], grabbedPiece);
 								std::cout << "In check, returned to origin tile" << std::endl;
+								texts_dictionary["info_text"].setString("In check, returned to origin tile");
 							}
 							else
 							{
@@ -192,7 +198,7 @@ int main()
 						move.play();
 
 					}
-
+					
 
 
 				}
