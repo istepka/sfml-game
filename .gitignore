@@ -1,6 +1,7 @@
 *pch.h
 *.sln
 graphics/
+*/save.txt
 
 .vscode
 includes/

@@ -44,12 +44,30 @@ void ui_load_sprites_and_textures(std::map<std::string, sf::Texture> &textures_d
 	textures_dictionary["button_wide_highlighted"].loadFromFile("./res/button_wide_highlighted.png");
 	textures_dictionary["button_wide_highlighted"].setSmooth(true);
 
+	textures_dictionary["mute_sound"] = sf::Texture();
+	textures_dictionary["mute_sound"].loadFromFile("./res/mute_sound.png");
+	textures_dictionary["mute_sound"].setSmooth(true);
+
+	textures_dictionary["high_sound"] = sf::Texture();
+	textures_dictionary["high_sound"].loadFromFile("./res/high_sound.png");
+	textures_dictionary["high_sound"].setSmooth(true);
+
+	textures_dictionary["low_sound"] = sf::Texture();
+	textures_dictionary["low_sound"].loadFromFile("./res/low_sound.png");
+	textures_dictionary["low_sound"].setSmooth(true);
+	textures_dictionary["low_sound"].setSmooth(true);
+
+	sprites_dictionary["sound_button"] = sf::Sprite(textures_dictionary["high_sound"]);
+	sprites_dictionary["sound_button"].setTextureRect(sf::IntRect(0, 0, 300, 300));
+	sprites_dictionary["sound_button"].setPosition(WINDOW_SIZE_X  - 100, WINDOW_SIZE_Y - 100);
+	sprites_dictionary["sound_button"].setScale(0.3, 0.3);
+
+
+
 	sprites_dictionary["play_button"] = sf::Sprite(textures_dictionary["button_wide_texture"]);
 	sprites_dictionary["play_button"].setTextureRect(sf::IntRect(0, 0, 300, 60));
 	sprites_dictionary["play_button"].setPosition(WINDOW_SIZE_X / 2 - 150, 300);
 	sprites_dictionary["play_button"].setColor(button_color);
-
-
 
 	textures_dictionary["back_button_texture"] = sf::Texture();
 	textures_dictionary["back_button_texture"].loadFromFile("./res/back.png");
@@ -282,10 +300,23 @@ void ui_draw_frame(sf::RenderWindow &window, int game_state, int grabbed_index, 
 	}
 
 	window.draw(texts_dictionary["info_text"]);
+	window.draw(sprites_dictionary["sound_button"]);
 
 	window.display();
 }
 
+
+void ui_change_sound_volume(int to_volume, std::map<std::string, sf::Sprite>& sprites_dictionary, std::map<std::string, sf::Texture>& textures_dictionary) {
+	if (to_volume == 0) {
+		sprites_dictionary["sound_button"].setTexture(textures_dictionary["mute_sound"]);
+	}
+	else if (to_volume == 10) {
+		sprites_dictionary["sound_button"].setTexture(textures_dictionary["high_sound"]);
+	}
+	else if (to_volume == 5) {
+		sprites_dictionary["sound_button"].setTexture(textures_dictionary["low_sound"]);
+	}
+}
 
 
 void ui_load_sounds()

@@ -17,7 +17,7 @@ int SINGLE_TILE_WIDTH = 91, SINGLE_TILE_HEIGHT = 90;
 bool is_piece_grabbed = false;
 int grabbed_index = -1;
 int game_state = 0; //0 - menu, 1 - game 
-int sound_volume = 20; // 0-100
+int sound_volume = 10; // 0-10
 
 Board board;
 
@@ -103,6 +103,13 @@ int main()
 					else if (sprites_dictionary["exit_button_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 					{
 						window.close();
+					}
+					else if (sprites_dictionary["sound_button"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+					{
+						sound_volume = sound_volume == 0 ? 10 : sound_volume == 5 ? 0 : 5;
+						ui_change_sound_volume(sound_volume, sprites_dictionary, textures_dictionary);
+						click.setVolume(sound_volume / 2);
+						move.setVolume(sound_volume);
 					}
 
 					click.play();
