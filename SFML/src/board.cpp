@@ -84,14 +84,26 @@ void bd_move(Piece &piece, int x, int y)
 	piece.y = y;
 }
 
+void bd_resurrect(Piece *piece) {
+	if(piece)
+		piece->alive = true;
+	std::cout<<" Like a phoenix from the ashes " <<std::endl;
+}
+
 void bd_destroy(Piece &piece)
 {
 	piece.alive = false;
 	bd_build();
+
 }
 
 void bd_build()
 {
+	for(int i = 0; i<4; i++)
+		for (int j = 0; j < 7; j++) {
+			board.board[i][j] = nullptr;
+		}
+
 	for (Piece &piece : board.alivePieces)
 	{
 		if (piece.alive)

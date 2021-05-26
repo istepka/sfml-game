@@ -105,6 +105,11 @@ void ui_load_sprites_and_textures(std::map<std::string, sf::Texture> &textures_d
 	sprites_dictionary["save_game_button_sprite"].setTextureRect(sf::IntRect(0, 0, 150, 60));
 	sprites_dictionary["save_game_button_sprite"].setPosition(WINDOW_SIZE_X - 160, 80);
 	sprites_dictionary["save_game_button_sprite"].setColor(button_color);
+
+	sprites_dictionary["concede_button_sprite"] = sf::Sprite(textures_dictionary["button_wide_texture"]);
+	sprites_dictionary["concede_button_sprite"].setTextureRect(sf::IntRect(0, 0, 150, 60));
+	sprites_dictionary["concede_button_sprite"].setPosition(WINDOW_SIZE_X - 160, 150);
+	sprites_dictionary["concede_button_sprite"].setColor(button_color);
 }
 
 void ui_load_texts(std::map<std::string, sf::Text>& texts_dic, sf::Font &font, sf::Font &bold_font)
@@ -139,6 +144,11 @@ void ui_load_texts(std::map<std::string, sf::Text>& texts_dic, sf::Font &font, s
 	new_game.setString("New game");
 	new_game.setPosition(WINDOW_SIZE_X - 145, 25);
 	new_game.setCharacterSize(24);
+	
+	sf::Text concede_text = text_turn;
+	concede_text.setString("Concede");
+	concede_text.setPosition(WINDOW_SIZE_X - 135, 165);
+	concede_text.setCharacterSize(24);
 
 
 	sf::Text save_game = text_turn;
@@ -159,6 +169,12 @@ void ui_load_texts(std::map<std::string, sf::Text>& texts_dic, sf::Font &font, s
 	title_text.setFont(bold_font);
 
 
+	sf::Text gameover_text = text_turn;
+	gameover_text.setString("");
+	gameover_text.setPosition(WINDOW_SIZE_X / 2 - 110,60);
+	gameover_text.setCharacterSize(45);
+
+
 	texts_dic["text_turn"] = text_turn;
 	texts_dic["menu_play"] = menu_play;
 	texts_dic["menu_load"] = menu_load;
@@ -167,7 +183,9 @@ void ui_load_texts(std::map<std::string, sf::Text>& texts_dic, sf::Font &font, s
 	texts_dic["new_game"] = new_game;
 	texts_dic["save_game"] = save_game;
 	texts_dic["info_text"] = info_text;
+	texts_dic["concede_text"] = concede_text;
 	texts_dic["title_text"] = title_text;
+	texts_dic["gameover_text"] = gameover_text;
 }
 
 
@@ -278,10 +296,13 @@ void ui_draw_frame(sf::RenderWindow &window, int game_state, int grabbed_index, 
 		window.draw(sprites_dictionary["back_button_background_sprite"]);
 		window.draw(sprites_dictionary["back_button_sprite"]);
 		window.draw(sprites_dictionary["save_game_button_sprite"]);
+		window.draw(sprites_dictionary["concede_button_sprite"]);
 		window.draw(texts_dictionary["save_game"]);
 		window.draw(texts_dictionary["new_game"]);
 		window.draw(texts_dictionary["text_turn"]);
 		window.draw(texts_dictionary["save_exit_text"]);
+		window.draw(texts_dictionary["gameover_text"]);
+		window.draw(texts_dictionary["concede_text"]);
 		
 	}
 	else if (game_state == 0) //display main_menu stuff
@@ -296,6 +317,7 @@ void ui_draw_frame(sf::RenderWindow &window, int game_state, int grabbed_index, 
 		
 		window.draw(texts_dictionary["menu_exit"]);
 		window.draw(texts_dictionary["title_text"]);
+		
 		
 	}
 

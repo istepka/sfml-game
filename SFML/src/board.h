@@ -53,3 +53,4 @@ void bd_undo();
 void bd_save();
 void bd_load_save();
 void bd_new_game();
+void bd_resurrect(Piece * piece);
