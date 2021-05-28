@@ -5,6 +5,7 @@
 #include <SFML/Audio.hpp>
 #include <utils.h>
 
+
 void _render_pieces()
 {
 	std::vector<Piece> Pieces = bd_getPiecesOnBoard();
@@ -261,6 +262,18 @@ void ui_load_pieces(sf::Sprite* PiecesSprites)
 		move_piece_to_tile(board.alivePieces[i].x, board.alivePieces[i].y, PiecesSprites[i], Pieces[i]);
 }
 
+void ui_load_sound_and_font(sf::Font* font, sf::Font* bold_font, sf::SoundBuffer* buffer_click, sf::SoundBuffer* buffer_move, sf::Sound* click, sf::Sound* move) {
+	(*buffer_click).loadFromFile("./res/click.flac");
+	(*click).setBuffer((*buffer_click));
+	(*click).setVolume(sound_volume / 2);
+
+	(*buffer_move).loadFromFile("./res/move.flac");
+	(*move).setBuffer((*buffer_move));
+	(*move).setVolume(sound_volume);
+
+	(*font).loadFromFile("./res/Raleway-Medium.ttf");
+	(*bold_font).loadFromFile("./res/Raleway-SemiBold.ttf");
+}
 
 void ui_draw_frame(sf::RenderWindow &window, int game_state, int grabbed_index, bool is_piece_grabbed, sf::Sprite *PiecesSprites,  std::map<std::string, sf::Sprite> &sprites_dictionary, std::map<std::string, sf::Text> &texts_dictionary)
 {
@@ -371,3 +384,96 @@ void ui_play_piece_sound()
 }
 
 
+bool ui_handle_in_game_buttons(std::map<std::string, sf::Texture>& textures_dictionary, std::map<std::string, sf::Sprite>& sprites_dictionary, std::map<std::string, sf::Text>& texts_dictionary, sf::Sprite* PiecesSprites,
+	bool *gameover, int *game_state, sf::Sound * click_sound, std::string *whose_turn, int *sound_volume, sf::Sound *move_sound, sf::RenderWindow &window) {
+
+
+	if ((*game_state) == 0) { //menu actions
+		
+		
+		if (sprites_dictionary["play_button"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+		{
+
+
+			bd_new_game();
+			ui_load_pieces(PiecesSprites);
+
+			(*whose_turn) = "white";
+			board.toMove = PieceColor::white;
+			texts_dictionary["text_turn"].setString("Turn: " + (*whose_turn));
+			(*game_state) = 1;
+
+		}
+		else if (sprites_dictionary["load_button_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+		{
+			bd_load_save();
+			ui_load_pieces(PiecesSprites);
+
+			(*whose_turn) = board.toMove == PieceColor::white ? "white" : "black";
+			texts_dictionary["text_turn"].setString("Turn: " + (*whose_turn));
+			(*game_state) = 1;
+
+		}
+		else if (sprites_dictionary["exit_button_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+		{
+			window.close();
+		}
+		else
+			return false;
+			
+
+			(*click_sound).play();
+
+		
+	}
+	else if ((*game_state) == 1) {
+
+		if (sprites_dictionary["back_button_background_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+		{
+			texts_dictionary["gameover_text"].setString("");
+			(*gameover) = false;
+			(*game_state) = 0;
+			(*click_sound).play();
+		}
+		else if (sprites_dictionary["save_game_button_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+		{
+			bd_save();
+			texts_dictionary["info_text"].setString("Succesfully saved!");
+			(*click_sound).play();
+		}
+		else if (sprites_dictionary["concede_button_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+		{
+			texts_dictionary["gameover_text"].setString((*whose_turn) + " died!");
+			texts_dictionary["text_turn"].setString("");
+			(*gameover) = true;
+			(*click_sound).play();
+		}
+		else if (sprites_dictionary["new_game_button_sprite"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+		{
+			bd_new_game();
+			ui_load_pieces(PiecesSprites);
+			(*whose_turn) = "white";
+			board.toMove = PieceColor::white;
+			texts_dictionary["text_turn"].setString("Turn: " + (*whose_turn));
+			texts_dictionary["gameover_text"].setString("");
+			(*gameover) = false;
+			(*click_sound).play();
+		}
+		else
+			return false;
+		
+	}
+
+
+	if (sprites_dictionary["sound_button"].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+	{
+		(*sound_volume) = (*sound_volume) == 0 ? 10 : (*sound_volume) == 5 ? 0 : 5;
+		ui_change_sound_volume((*sound_volume), sprites_dictionary, textures_dictionary);
+		(*move_sound).setVolume((*sound_volume) / 2);
+		(*click_sound).setVolume((*sound_volume));
+		(*click_sound).play();
+	}
+
+	return true;
+
+}

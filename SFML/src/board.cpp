@@ -132,13 +132,7 @@ void bd_save()
 
 	}
 
-	/*for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 7; j++)
-			save_file << board.board[i][j] << " ";
-		save_file << "\n";
-	}*/
 	save_file.close();
-
 }
 
 void bd_clear()
